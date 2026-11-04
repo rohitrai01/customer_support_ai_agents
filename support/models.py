@@ -7,7 +7,14 @@ class Conversation(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="conversations")
     order = models.ForeignKey(Order,on_delete=models.CASCADE,related_name="conversations")
     created_at=models.DateTimeField(auto_now_add=True)
-
+    
+    @property
+    def manager_involved(self):
+        return self.agentlog.filter(event_type="manager").exists()
+    @property
+    def rist_involved(self):
+        return self.agentlog.filter(event_type="risk").exists()
+    
     def __str__(self):
         return f"conversation #{self.id}-{self.user.username} / order #{self.order.id}"
 
